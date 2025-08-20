@@ -4,11 +4,27 @@ import express from "express";
 
 const router = express.Router();
 
-router.get("/:id",async(req, res)=>{
+// Get ALL books with details
+router.get("/", async (req, res) => {
+  try {
+    const books = await Book.find();  // Fetch all books
+    res.json(books);                  // Return full details
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch books" });
+  }
+});
 
-    const books= await Book.find();
-    res.json(books);
-
+// Get ONE book by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id); // use req.params.id
+    if (!book) {
+      return res.status(404).json({ error: "Book not found" });
+    }
+    res.json(book);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch book" });
+  }
 });
 
 
